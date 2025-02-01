@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabla de Conversión de Pesos a Bolívares - Recarga Directv</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.4); /* Fondo oscuro */
+        }
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border: 5px solid #007BFF; /* Marco color azul */
+            border-radius: 15px; /* Bordes redondeados */
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .modal-content h2 {
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+            display: none;
+        }
+        @media (max-width: 600px) {
+            .modal-content {
+                width: 95%;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="modal-content">
+        <h2>Ingrese aquí el Monto a Recargar en Pesos para ver el Monto a Pagar en BS</h2>
+        <div class="form-group">
+            <label for="montoPesos">💰 Monto en Pesos:</label>
+            <input type="number" id="montoPesos" name="montoPesos" oninput="convertToBs()" required>
+            <span id="minRecargaMsg" class="error">Recarga Mínima 10 MIL Pesos</span>
+        </div>
+        <div class="form-group">
+            <label for="montoBs">💵 Monto en BS:</label>
+            <input type="text" id="montoBs" name="montoBs" readonly>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        const conversionTable = {
+            1000: 20.00,
+            2000: 40.00,
+            3000: 60.00,
+            4000: 80.00,
+            5000: 100.00,
+            6000: 120.00,
+            7000: 140.00,
+            8000: 160.00,
+            9000: 180.00,
+            10000: 207.00,
+            20000: 398.00,
+            30000: 590.00,
+            40000: 782.00,
+            50000: 973.00,
+            60000: 1165.00,
+            70000: 1360.00,
+            80000: 1550.00,
+            90000: 1750.00,
+            100000: 1950.00
+        };
+        let minRecarga = 10000; // Mínima recarga en pesos
+
+        // Función para convertir pesos a bolívares
+        function convertToBs() {
+            const montoPesos = parseInt(document.getElementById('montoPesos').value, 10);
+            const minRecargaMsg = document.getElementById('minRecargaMsg');
+            let montoBs = 0;
+
+            if (montoPesos < minRecarga) {
+                minRecargaMsg.style.display = 'block';
+                document.getElementById('montoBs').value = '';
+                return;
+            } else {
+                minRecargaMsg.style.display = 'none';
+            }
+
+            // Descomponer el monto en múltiplos de 10,000 y 1,000
+            const multiplesDeDiezMil = Math.floor(montoPesos / 10000) * 10000;
+            const multiplesDeMil = montoPesos % 10000;
+
+            if (multiplesDeDiezMil in conversionTable) {
+                montoBs += conversionTable[multiplesDeDiezMil];
+            }
+            if (multiplesDeMil in conversionTable) {
+                montoBs += conversionTable[multiplesDeMil];
+            }
+
+            document.getElementById('montoBs').value = `${montoBs.toFixed(2)} BS`; // Mostrar en formato de 2 decimales
+        }
+    </script>
+</body>
+</html>
+
